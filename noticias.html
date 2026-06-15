@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noticias — AENZA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@1,700;1,800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#fff;color:#0a0a12;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{border:none;background:none;cursor:none;font-family:inherit}
+img{display:block;max-width:100%}
+:root{
+  --blue:#0345F5;--blue2:#0234c8;--ink:#0a0a12;
+  --body:#3a3a52;--light:#6e6e88;--rule:#eaeaf2;
+  --surface:#f6f6f9;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Playfair Display',Georgia,serif;
+  --spring:cubic-bezier(.16,1,.3,1);
+  --max:1200px;--nav:68px;
+}
+#cursor{position:fixed;inset:0;z-index:9999;pointer-events:none}
+#c-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--blue);transform:translate(-50%,-50%)}
+#c-ring{position:absolute;width:34px;height:34px;border:1.5px solid rgba(3,69,245,.35);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s var(--spring),height .4s var(--spring)}
+body.over-dark #c-dot{background:#fff}
+body.over-dark #c-ring{border-color:rgba(255,255,255,.4)}
+#nav{position:fixed;top:0;left:0;right:0;z-index:800;height:var(--nav);display:flex;align-items:center;justify-content:space-between;padding:0 52px;transition:background .4s,box-shadow .4s}
+#nav.solid{background:rgba(255,255,255,.97);backdrop-filter:blur(24px);box-shadow:0 1px 0 var(--rule)}
+.nav-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.92rem;letter-spacing:.05em;color:#fff;transition:color .4s}
+#nav.solid .nav-logo{color:var(--ink)}
+.nav-logo-img{height:52px;width:auto;object-fit:contain;display:block;filter:brightness(0) invert(1);transition:filter .4s}
+#nav.solid .nav-logo-img{filter:none}
+.nav-logo-mark{display:none}
+.nav-links{display:none}
+@media(min-width:1081px){.nav-links{display:flex;align-items:center;gap:6px;list-style:none}}
+.nav-links>li>a{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.55);padding:7px 14px;border-radius:4px;transition:color .25s,background .25s}
+#nav.solid .nav-links>li>a{color:#6e6e88}
+.nav-links>li>a:hover{color:#fff;background:rgba(255,255,255,.08)}
+#nav.solid .nav-links>li>a:hover{color:var(--blue);background:rgba(3,69,245,.06)}
+.nav-btn-secondary{display:inline-flex;align-items:center;gap:9px;padding:10px 20px;border-radius:6px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;transition:background .25s}
+#nav.solid .nav-btn-secondary{background:rgba(9,9,15,.07);color:var(--ink)}
+.nav-dir-icon{display:grid;grid-template-columns:1fr 1fr;gap:2.5px}
+.nav-dir-icon span{display:block;width:4px;height:4px;border-radius:1px;background:currentColor;opacity:.7}
+.nav-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:4px;background:var(--blue);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;transition:background .22s}
+.nav-cta:hover{background:var(--blue2)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.ic{display:block}
+
+/* ═══ HERO ═══ */
+.nw-hero{
+  position:relative;height:60vh;min-height:440px;
+  overflow:hidden;background:#06080f;
+  display:flex;align-items:flex-end;
+}
+.nw-hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1800&auto=format&fit=crop&q=85') center/cover;
+  filter:brightness(.32) saturate(.7);
+  transform:scale(1.06);
+  animation:heroZ 1.8s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes heroZ{to{transform:scale(1);filter:brightness(.38) saturate(.8)}}
+.nw-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,6,14,.92) 0%,rgba(6,6,14,.15) 65%,transparent 100%),linear-gradient(to right,rgba(6,6,14,.5) 0%,transparent 55%)}
+.nw-hero-content{position:relative;z-index:2;max-width:var(--max);margin:0 auto;padding:0 52px 72px;width:100%}
+.nw-hero-eyebrow{display:flex;align-items:center;gap:10px;font-size:.6rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:18px}
+.nw-hero-eyebrow span{width:20px;height:1px;background:var(--blue);display:block}
+.nw-hero h1{font-size:clamp(2.8rem,5.5vw,5rem);font-weight:800;line-height:1.04;letter-spacing:-.035em;color:#fff;margin-bottom:14px}
+.nw-hero h1 em{font-family:var(--serif);font-style:italic;color:var(--blue)}
+.nw-hero-sub{font-size:.95rem;color:rgba(255,255,255,.45);max-width:440px;line-height:1.7}
+
+/* ═══ FILTROS ═══ */
+.nw-filters{background:#fff;border-bottom:1px solid var(--rule);position:sticky;top:var(--nav);z-index:5}
+.nw-filters-inner{max-width:var(--max);margin:0 auto;padding:0 52px;display:flex;align-items:center;gap:8px;height:58px;overflow-x:auto;scrollbar-width:none}
+.nw-filters-inner::-webkit-scrollbar{display:none}
+.nw-filter{display:inline-flex;align-items:center;padding:7px 18px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1.5px solid var(--rule);color:var(--light);cursor:pointer;white-space:nowrap;background:#fff;transition:all .22s var(--spring)}
+.nw-filter:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+.nw-filter.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(3,69,245,.25)}
+
+/* ═══ GRID ═══ */
+.nw-main{background:var(--ink);padding:64px 0 96px}
+.nw-grid{max-width:var(--max);margin:0 auto;padding:0 52px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+
+/* ═══ CARD — foto ocupa toda la card ═══ */
+.nw-card{
+  position:relative;border-radius:16px;overflow:hidden;
+  aspect-ratio:3/4;
+  cursor:pointer;
+  transition:transform .5s var(--spring),box-shadow .5s var(--spring);
+}
+.nw-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 32px 64px rgba(3,69,245,.2)}
+
+/* foto bg */
+.nw-card-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .8s var(--spring);
+}
+.nw-card:hover .nw-card-img{transform:scale(1.06)}
+
+/* gradiente oscuro */
+.nw-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,6,14,.97) 0%,rgba(6,6,14,.5) 45%,rgba(6,6,14,.15) 70%,transparent 100%);
+  transition:opacity .4s;
+}
+.nw-card:hover .nw-card-overlay{opacity:.85}
+
+/* top: cat + tiempo */
+.nw-card-top{
+  position:absolute;top:20px;left:20px;right:20px;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nw-card-cat{
+  padding:5px 12px;border-radius:5px;
+  font-size:.56rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:#fff;
+}
+.nw-card-min{
+  display:flex;align-items:center;gap:5px;
+  font-size:.62rem;font-weight:600;color:rgba(255,255,255,.55);
+  background:rgba(0,0,0,.35);backdrop-filter:blur(8px);
+  padding:4px 10px;border-radius:12px;
+}
+
+/* bottom: empresa + titulo */
+.nw-card-bottom{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  padding:24px 24px 28px;
+}
+.nw-card-empresa{
+  font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.nw-card-empresa::before{content:'';width:10px;height:1.5px;background:var(--blue)}
+.nw-card-title{
+  font-size:1.05rem;font-weight:800;color:#fff;
+  line-height:1.35;letter-spacing:-.01em;
+}
+
+/* body debajo */
+.nw-card-body{
+  position:absolute;bottom:0;left:0;right:0;z-index:3;
+  padding:0 24px 28px;
+  transform:translateY(100%);opacity:0;
+  transition:transform .5s var(--spring),opacity .4s;
+}
+.nw-card:hover .nw-card-bottom{padding-bottom:88px}
+.nw-card:hover .nw-card-body{transform:translateY(0);opacity:1}
+.nw-card-excerpt{
+  font-size:.78rem;line-height:1.6;color:rgba(255,255,255,.65);
+  margin-bottom:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.nw-card-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px;
+  transition:gap .3s,border-color .3s;
+}
+.nw-card:hover .nw-card-cta{gap:10px;border-color:#fff}
+
+/* ═══ MODAL — READER PREMIUM ═══ */
+.nw-modal{
+  position:fixed;inset:0;z-index:1000;
+  display:none;
+}
+.nw-modal.open{display:flex}
+.nw-modal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(6,6,14,.7);
+  backdrop-filter:blur(12px);
+  animation:fadeIn .35s ease forwards;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.nw-modal-panel{
+  position:relative;z-index:1;
+  width:min(720px,100%);
+  margin-left:auto;
+  background:#fff;
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  animation:slideIn .45s cubic-bezier(.16,1,.3,1) forwards;
+  box-shadow:-32px 0 80px rgba(6,6,14,.35);
+}
+@keyframes slideIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Close */
+.nw-modal-close{
+  position:sticky;top:0;left:100%;
+  width:44px;height:44px;border-radius:50%;margin:-22px 16px 0 auto;
+  background:#fff;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(6,6,14,.18);
+  cursor:pointer;z-index:10;
+  transition:background .22s,transform .25s var(--spring);
+  flex-shrink:0;
+}
+.nw-modal-close:hover{background:var(--ink);color:#fff;transform:scale(1.1) rotate(90deg)}
+
+/* Hero imagen full-bleed */
+.nw-modal-hero{
+  width:100%;height:320px;flex-shrink:0;
+  background-size:cover;background-position:center;
+  position:relative;
+}
+.nw-modal-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,6,14,.96) 0%,rgba(6,6,14,.3) 55%,transparent 100%);
+}
+.nw-modal-hero-content{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:36px 44px;
+}
+.nw-modal-meta{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;
+}
+.nw-modal-cat-pill{
+  padding:5px 12px;border-radius:4px;
+  font-size:.56rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+}
+.nw-modal-empresa{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase}
+.nw-modal-sep{color:rgba(255,255,255,.25)}
+.nw-modal-date{font-size:.72rem;font-weight:500;color:rgba(255,255,255,.4)}
+.nw-modal-title{
+  font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;
+  color:#fff;line-height:1.18;letter-spacing:-.025em;
+  margin-bottom:14px;
+}
+.nw-modal-byline{display:flex;align-items:center;gap:8px}
+.nw-modal-readtime{
+  display:flex;align-items:center;gap:6px;
+  font-size:.68rem;font-weight:600;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:.08em;
+}
+
+/* Body */
+.nw-modal-body{padding:44px;flex:1}
+.nw-modal-lead{
+  font-size:1.12rem;line-height:1.72;
+  color:var(--ink);font-weight:500;
+  padding-bottom:28px;margin-bottom:28px;
+  border-bottom:2px solid var(--blue);
+}
+.nw-modal-content p{
+  font-size:1rem;line-height:1.9;
+  color:var(--body);margin-bottom:22px;
+}
+.nw-modal-content p:last-child{margin-bottom:0}
+
+/* Tags de categoría */
+.nw-modal-tags{
+  margin-top:40px;padding-top:28px;
+  border-top:1px solid var(--rule);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.nw-modal-tag{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--rule);
+  font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--light);
+}
+
+/* ═══ FOOTER ═══ */
+#footer{background:#07080f;padding:0;display:block;visibility:visible}
+.ft-top-bar{display:flex;align-items:center;justify-content:space-between;padding:32px 52px;border-bottom:1px solid rgba(255,255,255,.06)}
+.ft-logo-big{display:flex;align-items:center;gap:12px;font-size:1.6rem;font-weight:800;letter-spacing:.06em;color:#fff}
+.ft-tagline-italic{font-size:.82rem;font-style:italic;color:rgba(255,255,255,.35);font-family:var(--serif);margin-top:4px}
+.ft-top-right{display:flex;align-items:center;gap:12px}
+.ft-contact-btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;padding:12px 28px;border-radius:4px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background .22s}
+.ft-contact-btn:hover{background:var(--blue2)}
+.ft-social-row{display:flex;gap:8px}
+.ft-social-row a{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);transition:border-color .22s,color .22s}
+.ft-social-row a:hover{border-color:var(--blue);color:var(--blue)}
+.ft-cols-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.06)}
+.ft-col-v2{padding:40px 52px;border-right:1px solid rgba(255,255,255,.06)}
+.ft-col-v2:last-child{border-right:none}
+.ft-col-v2 h5{font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px}
+.ft-col-v2 ul{list-style:none}
+.ft-col-v2 li{margin-bottom:11px}
+.ft-col-v2 a{font-size:.82rem;color:rgba(255,255,255,.5);transition:color .22s;display:inline-block}
+.ft-col-v2 a:hover{color:#fff}
+.ft-contact-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.ft-contact-row svg{flex-shrink:0;margin-top:1px;color:var(--blue)}
+.ft-contact-row span,.ft-contact-row a{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.55;display:block}
+.ft-bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:18px 52px}
+.ft-bottom-bar p,.ft-bottom-bar a{font-size:.68rem;color:rgba(255,255,255,.2);font-style:italic}
+
+@media(max-width:1080px){
+  .nw-grid{grid-template-columns:1fr 1fr;padding:0 36px;gap:16px}
+  .nw-hero-content,.nw-filters-inner{padding:0 36px}
+  .nw-modal-panel{width:100%}
+  .nw-modal-hero{height:260px}
+  .nw-modal-hero-content{padding:28px 32px}
+  .nw-modal-body{padding:32px}
+  .ft-cols-grid{grid-template-columns:1fr 1fr}
+  .ft-col-v2{padding:32px 36px}
+  .ft-top-bar,.ft-bottom-bar{padding:28px 36px}
+}
+@media(max-width:680px){
+  .nw-grid{grid-template-columns:1fr;padding:0 22px}
+  .nw-hero-content,.nw-filters-inner{padding:0 22px}
+  .nw-card{aspect-ratio:4/5}
+  .nw-modal-hero{height:220px}
+  .nw-modal-body{padding:24px 22px}
+  .nw-modal-hero-content{padding:20px 22px}
+  .ft-cols-grid{grid-template-columns:1fr}
+  .ft-col-v2{border-right:none;border-bottom:1px solid rgba(255,255,255,.06);padding:28px 22px}
+  .ft-top-bar{flex-direction:column;align-items:flex-start;gap:20px;padding:24px 22px}
+  .ft-bottom-bar{padding:14px 22px;flex-direction:column;gap:6px;align-items:flex-start}
+}
+
+/* ── Grid: fondo claro ── */
+.nw-main { background: var(--surface) !important; }
+
+
+/* ── Fix superposición de textos en cards ── */
+.nw-card-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; z-index: 2;
+  padding: 24px 24px 28px;
+  transition: padding-bottom .5s var(--spring);
+}
+.nw-card:hover .nw-card-bottom {
+  padding-bottom: 110px;
+}
+.nw-card-body {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; z-index: 3;
+  padding: 0 24px 24px;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform .5s var(--spring), opacity .4s .05s;
+}
+.nw-card:hover .nw-card-body {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/* ── Fix alineación título + párrafo ── */
+.nw-card-bottom {
+  padding: 24px 28px 32px !important;
+  transition: padding-bottom .5s var(--spring) !important;
+}
+.nw-card:hover .nw-card-bottom {
+  padding-bottom: 130px !important;
+}
+.nw-card-body {
+  padding: 0 28px 28px !important;
+}
+.nw-card-title {
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+.nw-card-excerpt {
+  font-size: .8rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,.65);
+  margin-bottom: 14px;
+  -webkit-line-clamp: 3;
+}
+.nw-card-empresa {
+  margin-bottom: 10px;
+}
+
+
+/* ── Fix alineación y espacio título/párrafo ── */
+.nw-card-bottom,
+.nw-card-body {
+  left: 0 !important;
+  right: 0 !important;
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+.nw-card-title {
+  margin-bottom: 0 !important;
+}
+.nw-card-body {
+  padding-top: 0 !important;
+}
+.nw-card-excerpt {
+  margin-top: 14px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid rgba(255,255,255,.15) !important;
+}
+
+
+/* ── Card content: un solo bloque unificado ── */
+.nw-card-bottom, .nw-card-body { display: none !important; }
+
+.nw-card-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0; z-index: 3;
+  padding: 28px;
+}
+.nw-card-empresa {
+  font-size: .6rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--blue);
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 10px;
+}
+.nw-card-empresa::before { content: ''; width: 10px; height: 1.5px; background: var(--blue); }
+.nw-card-title {
+  font-size: 1.02rem; font-weight: 800; color: #fff;
+  line-height: 1.38; letter-spacing: -.01em;
+  margin-bottom: 0;
+}
+.nw-card-reveal {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .55s cubic-bezier(.16,1,.3,1),
+              opacity .4s .08s,
+              margin-top .4s;
+  margin-top: 0;
+}
+.nw-card:hover .nw-card-reveal {
+  max-height: 200px; opacity: 1; margin-top: 16px;
+}
+.nw-card-excerpt {
+  font-size: .79rem; line-height: 1.65;
+  color: rgba(255,255,255,.65);
+  margin-bottom: 16px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.nw-card-cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 2px;
+  transition: gap .3s, border-color .3s;
+}
+.nw-card:hover .nw-card-cta { gap: 10px; border-color: #fff; }
+
+</style>
+</head>
+<body class="over-dark">
+<div id="cursor"><div id="c-dot"></div><div id="c-ring"></div></div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo nav-logo-has-img">
+    <!-- Un solo logo — pon tu archivo aquí. Se vuelve blanco sobre hero y oscuro al hacer scroll -->
+    <img class="nav-logo-img single" src="logo-aenza.png" alt="AENZA"
+         onerror="this.style.display='none'"/>
+    <!-- Fallback SVG si no hay imagen -->
+    <svg class="nav-logo-mark" width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <path d="M2 26L14 2L26 26" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="19" y1="17" x2="27" y2="5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-logo-text" style="display:none">AENZA</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#quienes">Quiénes Somos</a></li>
+    <li><a href="https://investorrelations.aenza.com.pe/es" target="_blank">Inversionistas</a></li>
+    <li><a href="#noticias">Noticias</a></li>
+    <li><a href="https://www.canaletico.net/" target="_blank">Línea Ética</a></li>
+    <li><a href="https://www.aenza.com.pe/politicas/" target="_blank">Políticas</a></li>
+    <li><a href="https://www.aenza.com.pe/sostenibilidad/" target="_blank">Sostenibilidad</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="https://investorrelations.aenza.com.pe/gobierno-corporativo/directorio" target="_blank" class="nav-btn-secondary">
+      <span class="nav-dir-icon"><span></span><span></span><span></span><span></span></span>
+      Directorio
+    </a>
+    <a href="https://www.aenza.com.pe/contactenos/aenza/?subject=AENZA" target="_blank" class="nav-cta">
+      Contáctenos
+      <svg class="ic" width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 5h8M5 1l4 4-4 4"/></svg>
+    </a>
+    <button class="hb" id="hb" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<div class="nw-hero">
+  <div class="nw-hero-bg"></div>
+  <div class="nw-hero-content">
+    <div class="nw-hero-eyebrow"><span></span>AENZA · Sala de Prensa</div>
+    <h1>Últimas <em>noticias</em></h1>
+    <p class="nw-hero-sub">Novedades, logros y compromisos del Grupo AENZA y sus empresas en el Perú.</p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="nw-filters">
+  <div class="nw-filters-inner">
+    <button class="nw-filter active" data-cat="todos">Todos</button>
+    <button class="nw-filter" data-cat="Sostenibilidad">Sostenibilidad</button>
+    <button class="nw-filter" data-cat="Reconocimiento">Reconocimientos</button>
+    <button class="nw-filter" data-cat="Talento">Talento</button>
+    <button class="nw-filter" data-cat="Hito">Hitos</button>
+    <button class="nw-filter" data-cat="Medio Ambiente">Medio Ambiente</button>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="nw-main">
+  <div class="nw-grid" id="nw-grid">
+    <article class="nw-card" data-cat="Sostenibilidad" onclick="openArticle('n1')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#0345F5">Sostenibilidad</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            4 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">AENZA</div>
+        <h3 class="nw-card-title">Un nuevo hito en sostenibilidad para AENZA</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">AENZA ha sido incluida en el Dow Jones Best-in-Class MILA Pacific Alliance Index, reconocimiento regional a las compañías con mejor desempeño en sostenibilidad.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>    <article class="nw-card" data-cat="Medio Ambiente" onclick="openArticle('n2')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#16a34a">Medio Ambiente</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            3 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">UNNA Infraestructura</div>
+        <h3 class="nw-card-title">Economía circular que empieza en el viaje diario</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">Línea 1 del Metro de Lima puso en marcha el programa de recolección de plásticos flexibles en estaciones, incorporando criterios de economía circular.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>    <article class="nw-card" data-cat="Reconocimiento" onclick="openArticle('n3')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#d97706">Reconocimiento</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            3 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">VIVA</div>
+        <h3 class="nw-card-title">VIVA, reconocido como uno de los Mayores Promotores Inmobiliarios</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">VIVA Negocio Inmobiliario fue reconocida en los Premios Mivivienda 2026 como uno de los promotores con mayor colocación de viviendas en Lima y Callao.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>    <article class="nw-card" data-cat="Hito" onclick="openArticle('n4')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#7c3aed">Hito</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            4 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">UNNA Infraestructura</div>
+        <h3 class="nw-card-title">LÍNEA 1: ¡Más de 1,500 millones de pasajeros!</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">Línea 1 del Metro de Lima superó los 1,500 millones de pasajeros transportados, consolidándose como sistema confiable y moderno a lo largo de 14 años.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>    <article class="nw-card" data-cat="Talento" onclick="openArticle('n5')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#0891b2">Talento</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            2 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">AENZA</div>
+        <h3 class="nw-card-title">Segunda edición del Programa Corporativo Líderes en Acción</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">Por segundo año consecutivo, AENZA pone en marcha el Programa Líderes en Acción, dirigido a jefaturas del grupo para fortalecer el liderazgo y la cultura corporativa.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>    <article class="nw-card" data-cat="Sostenibilidad" onclick="openArticle('n6')" tabindex="0" role="button">
+      <div class="nw-card-img" style="background-image:url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-card-overlay"></div>
+        <div class="nw-card-top">
+          <span class="nw-card-cat" style="background:#0345F5">Sostenibilidad</span>
+          <span class="nw-card-min">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            3 min
+          </span>
+        </div>
+      <div class="nw-card-content">
+        <div class="nw-card-empresa">UNNA Infraestructura</div>
+        <h3 class="nw-card-title">LÍNEA 1 obtiene su Segunda Estrella Huella de Carbono Perú</h3>
+        <div class="nw-card-reveal">
+          <p class="nw-card-excerpt">El proyecto operado por UNNA Infraestructura obtuvo su Segunda Estrella en el Programa Huella de Carbono Perú, otorgada por el Ministerio del Ambiente.</p>
+          <div class="nw-card-cta">
+          Leer nota
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        </div>
+      </div></article>
+  </div>
+</div>
+
+<!-- MODALES -->
+  <div class="nw-modal" id="modal-n1">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#0345F5">Sostenibilidad</span>
+            <span class="nw-modal-empresa">AENZA</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2025</span>
+          </div>
+          <h2 class="nw-modal-title">Un nuevo hito en sostenibilidad para AENZA</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              4 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">AENZA ha sido incluida en el Dow Jones Best-in-Class MILA Pacific Alliance Index, reconocimiento regional a las compañías con mejor desempeño en sostenibilidad.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>AENZA ha sido incluida en el Dow Jones Best-in-Class MILA Pacific Alliance Index, un índice regional que reconoce a las compañías con mejor desempeño en sostenibilidad dentro de los mercados de Chile, Colombia, México y Perú.</p><p>Este logro forma parte de un proceso de mejora sostenida iniciado a fines del 2021. Desde entonces, la compañía ha venido fortaleciendo su gestión ambiental, social y de gobierno corporativo, lo que se ha reflejado en una mejora constante de su puntaje en el Corporate Sustainability Assessment de S&P Global.</p><p>Gracias a este avance, AENZA ingresó desde 2022 al índice ESG de la Bolsa de Valores de Lima y ha mantenido su presencia en este reconocimiento local. Hoy, la inclusión en el Dow Jones Best-in-Class MILA Pacific Alliance Index representa un nuevo hito, al ubicar a la compañía dentro de un estándar regional más exigente.</p><p>La sostenibilidad es parte de la forma en que AENZA construye confianza, gestiona sus riesgos y genera valor de largo plazo para sus grupos de interés.</p></div>
+      </div>
+
+    </div>
+  </div>  <div class="nw-modal" id="modal-n2">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#16a34a">Medio Ambiente</span>
+            <span class="nw-modal-empresa">UNNA Infraestructura</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2025</span>
+          </div>
+          <h2 class="nw-modal-title">Economía circular que empieza en el viaje diario</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              3 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">Línea 1 del Metro de Lima puso en marcha el programa de recolección de plásticos flexibles en estaciones, incorporando criterios de economía circular.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>Línea 1 del Metro de Lima, proyecto operado por UNNA Infraestructura, puso en marcha el programa "Recolección de Plásticos Flexibles en estaciones", incorporando criterios de economía circular en el transporte público masivo.</p><p>La iniciativa promueve la correcta segregación de envolturas y empaques de uso cotidiano, que serán reaprovechados para su transformación en madera plástica. Además, esta acción incorpora un enfoque educativo que invita a los pasajeros a adoptar prácticas más responsables.</p><p>En esta primera etapa, el programa se implementa en las estaciones Angamos, La Cultura y Gamarra. El desarrollo de esta iniciativa se realiza en alianza con SINBA, empresa socioambiental especializada en modelos de economía circular, y cuenta con el respaldo del Ministerio del Ambiente.</p></div>
+      </div>
+
+    </div>
+  </div>  <div class="nw-modal" id="modal-n3">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#d97706">Reconocimiento</span>
+            <span class="nw-modal-empresa">VIVA</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2026</span>
+          </div>
+          <h2 class="nw-modal-title">VIVA, reconocido como uno de los Mayores Promotores Inmobiliarios</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              3 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">VIVA Negocio Inmobiliario fue reconocida en los Premios Mivivienda 2026 como uno de los promotores con mayor colocación de viviendas en Lima y Callao.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>VIVA Negocio Inmobiliario fue reconocida en los Premios Mivivienda 2026, como uno de los Promotores Inmobiliarios que logró mayor colocación de viviendas con el Crédito Mivivienda en Lima y Callao durante el 2025.</p><p>Este reconocimiento refleja el sólido compromiso de VIVA con la promoción y el desarrollo de proyectos que impactan positivamente en más familias peruanas, contribuyendo al crecimiento sostenido del país.</p><p>Un logro que reafirma su propósito: hacer posibles espacios y entornos sostenibles donde se proyecten vidas y negocios, generando bienestar, desarrollo urbano y compromiso ciudadano.</p></div>
+      </div>
+
+    </div>
+  </div>  <div class="nw-modal" id="modal-n4">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#7c3aed">Hito</span>
+            <span class="nw-modal-empresa">UNNA Infraestructura</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2025</span>
+          </div>
+          <h2 class="nw-modal-title">LÍNEA 1: ¡Más de 1,500 millones de pasajeros!</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              4 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">Línea 1 del Metro de Lima superó los 1,500 millones de pasajeros transportados, consolidándose como sistema confiable y moderno a lo largo de 14 años.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>Nos llena de orgullo celebrar que LÍNEA 1 del Metro de Lima, proyecto operado por nuestra unidad de negocio UNNA Infraestructura, ha superado los 1,500 millones de pasajeros transportados.</p><p>Durante la conmemoración de este hito, se rindió homenaje a los pasajeros frecuentes que representan la diversidad de nuestra comunidad: estudiantes, profesionales, madres y padres de familia, emprendedores. Sus testimonios nos recuerdan que cada viaje significa tiempo ganado, oportunidades creadas y sueños alcanzados.</p><p>Detrás de estas historias hay una operación que, a lo largo de 14 años, ha consolidado a LÍNEA 1 como un sistema confiable, moderno y seguro, transformando la movilidad urbana y mejorando la calidad de vida de millones de peruanos.</p></div>
+      </div>
+
+    </div>
+  </div>  <div class="nw-modal" id="modal-n5">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#0891b2">Talento</span>
+            <span class="nw-modal-empresa">AENZA</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2025</span>
+          </div>
+          <h2 class="nw-modal-title">Segunda edición del Programa Corporativo Líderes en Acción</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              2 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">Por segundo año consecutivo, AENZA pone en marcha el Programa Líderes en Acción, dirigido a jefaturas del grupo para fortalecer el liderazgo y la cultura corporativa.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>Por segundo año consecutivo, hemos puesto en marcha el Programa Corporativo Líderes en Acción, iniciativa dirigida a todas las jefaturas del grupo que busca fortalecer el liderazgo y la cultura corporativa.</p><p>Este año, el programa pone especial énfasis en un reto clave: gestionar la transformación organizacional en un entorno de constante cambio. Para ello, los módulos han sido diseñados con foco en la adaptabilidad, la gestión de la fatiga al cambio y la alineación con nuestras competencias corporativas y principios culturales.</p><p>A lo largo del curso, los participantes recibirán herramientas y estrategias prácticas que les permitirán liderar con visión, afrontar los desafíos operativos y alinear procesos con la estrategia corporativa.</p></div>
+      </div>
+
+    </div>
+  </div>  <div class="nw-modal" id="modal-n6">
+    <div class="nw-modal-backdrop" onclick="closeArticle()"></div>
+    <div class="nw-modal-panel">
+      <button class="nw-modal-close" onclick="closeArticle()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Hero del artículo -->
+      <div class="nw-modal-hero" style="background-image:url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=900&auto=format&fit=crop&q=85')">
+        <div class="nw-modal-hero-overlay"></div>
+        <div class="nw-modal-hero-content">
+          <div class="nw-modal-meta">
+            <span class="nw-modal-cat-pill" style="background:#0345F5">Sostenibilidad</span>
+            <span class="nw-modal-empresa">UNNA Infraestructura</span>
+            <span class="nw-modal-sep">·</span>
+            <span class="nw-modal-date">2025</span>
+          </div>
+          <h2 class="nw-modal-title">LÍNEA 1 obtiene su Segunda Estrella Huella de Carbono Perú</h2>
+          <div class="nw-modal-byline">
+            <span class="nw-modal-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              3 minutos de lectura
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="nw-modal-body">
+        <div class="nw-modal-lead">El proyecto operado por UNNA Infraestructura obtuvo su Segunda Estrella en el Programa Huella de Carbono Perú, otorgada por el Ministerio del Ambiente.</div>
+        <div class="nw-modal-divider"></div>
+        <div class="nw-modal-content"><p>El proyecto operado por nuestra unidad de negocio UNNA Infraestructura obtuvo su Segunda Estrella en el Programa Huella de Carbono Perú, otorgada por el Ministerio del Ambiente.</p><p>Luego de obtener su primera estrella el año pasado, LÍNEA 1 da un paso más y consigue este reconocimiento gracias a la verificación externa del cálculo de sus emisiones de gases de efecto invernadero correspondientes al año 2023.</p><p>Este logro es resultado del compromiso y liderazgo del equipo de Gestión Ambiental de UNNA Infraestructura, que condujo con éxito la auditoría realizada por la entidad acreditada Bureau Veritas.</p></div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- FOOTER -->
+<footer id="footer">
+
+  <!-- Top bar: logo + cta + social -->
+  <div class="ft-top-bar">
+    <div>
+      <div class="ft-logo-big">
+        <img src="logo-aenza.png" alt="AENZA" style="height:72px;width:auto;object-fit:contain;filter:brightness(0) invert(1);">
+      </div>
+      <div class="ft-tagline-italic">Construyendo el futuro del Perú desde hace más de 70 años.</div>
+    </div>
+    <div class="ft-top-right">
+      <a href="https://www.aenza.com.pe/contactenos/aenza/?subject=AENZA" target="_blank" class="ft-contact-btn">
+        CONTÁCTENOS
+        <svg class="ic" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 5h8M5 1l4 4-4 4"/></svg>
+      </a>
+      <div class="ft-social-row">
+        <a href="https://www.linkedin.com/company/72189954" target="_blank" aria-label="LinkedIn">
+          <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7H10v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://www.aenza.com.pe" target="_blank" aria-label="Sitio web">
+          <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columns -->
+  <div class="ft-cols-grid">
+
+    <div class="ft-col-v2">
+      <h5>Navegación</h5>
+      <ul>
+        <li><a href="#quienes">Conócenos</a></li>
+        <li><a href="#empresas">Nuestras Empresas</a></li>
+        <li><a href="#concesionarias">Concesionarias</a></li>
+        <li><a href="#noticias">Noticias</a></li>
+        <li><a href="https://www.aenza.com.pe/sostenibilidad/" target="_blank">Sostenibilidad</a></li>
+      </ul>
+    </div>
+
+    <div class="ft-col-v2">
+      <h5>Empresas</h5>
+      <ul>
+        <li><a href="https://www.unna.com.pe" target="_blank">UNNA Infraestructura</a></li>
+        <li><a href="https://www.unnaenergia.com.pe" target="_blank">UNNA Energía</a></li>
+        <li><a href="http://www.viva.com.pe" target="_blank">VIVA</a></li>
+        <li><a href="http://www.lineauno.pe/" target="_blank">Línea 1</a></li>
+        <li><a href="http://www.norvial.com.pe/" target="_blank">Norvial</a></li>
+        <li><a href="http://www.survial.com.pe/" target="_blank">Survial</a></li>
+      </ul>
+    </div>
+
+    <div class="ft-col-v2">
+      <h5>Inversionistas</h5>
+      <ul>
+        <li><a href="https://investorrelations.aenza.com.pe/es" target="_blank">Relación con Inversionistas</a></li>
+        <li><a href="https://investorrelations.aenza.com.pe/gobierno-corporativo/directorio" target="_blank">Nuestro Directorio</a></li>
+        <li><a href="https://www.canaletico.net/" target="_blank">Línea Ética</a></li>
+        <li><a href="https://www.aenza.com.pe" target="_blank">Políticas</a></li>
+      </ul>
+    </div>
+
+    <div class="ft-col-v2">
+      <h5>Contacto</h5>
+      <div class="ft-contact-row">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span>Av. Petit Thouars Nº 4957,<br>Miraflores 15047, Lima, Perú.</span>
+      </div>
+      <div class="ft-contact-row">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.89"/></svg>
+        <a href="tel:+5112130300">+51 (1) 213 0300</a>
+      </div>
+      <div class="ft-contact-row">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <a href="mailto:contactenos@aenza.com.pe">contactenos@aenza.com.pe</a>
+      </div>
+      <div class="ft-contact-row">
+        <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <a href="https://www.canaletico.net/" target="_blank">Canal Ético</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom -->
+  <div class="ft-bottom-bar">
+    <p>© 2025 <a href="https://www.aenza.com.pe" target="_blank">AENZA S.A.A.</a> — Todos los derechos reservados.</p>
+    <p>Lima · Perú</p>
+  </div>
+
+</footer>
+
+
+
+<script>
+/* CURSOR */
+const cdot=document.getElementById('c-dot'),cring=document.getElementById('c-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){cdot.style.cssText=`left:${mx}px;top:${my}px`;rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cring.style.cssText=`left:${rx}px;top:${ry}px`;requestAnimationFrame(loop)})();
+
+/* NAV */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{const on=scrollY>50;nav.classList.toggle('solid',on);document.body.classList.toggle('over-dark',!on)},{passive:true});
+
+/* MODAL */
+function openArticle(id){
+  document.querySelectorAll('.nw-modal').forEach(m=>m.classList.remove('open'));
+  const m=document.getElementById('modal-'+id);
+  if(!m)return;
+  m.style.display='flex';
+  requestAnimationFrame(()=>m.classList.add('open'));
+  document.body.style.overflow='hidden';
+}
+function closeArticle(){
+  document.querySelectorAll('.nw-modal').forEach(m=>{
+    m.classList.remove('open');
+    setTimeout(()=>{if(!m.classList.contains('open'))m.style.display='none'},400);
+  });
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeArticle()});
+
+/* FILTERS */
+document.querySelectorAll('.nw-filter').forEach(f=>{
+  f.addEventListener('click',()=>{
+    document.querySelectorAll('.nw-filter').forEach(x=>x.classList.remove('active'));
+    f.classList.add('active');
+    const cat=f.dataset.cat;
+    document.querySelectorAll('.nw-card').forEach(c=>{
+      c.style.display=cat==='todos'||c.dataset.cat===cat?'block':'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
